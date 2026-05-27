@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Do You Want to Accept Cookies?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head> 
+  <body>
+    <main class="app-shell">
+      <div class="stage" id="stage">
+        <section class="view is-active" data-view="cover">
+          <div class="view-bg cover-bg"></div>
+          <div class="cover-composition">
+            <div class="cover-utensil fork fork-left" aria-hidden="true"></div>
+            <div class="cover-utensil spoon spoon-left" aria-hidden="true"></div>
+            <div class="cover-plate" aria-hidden="true">
+              <div class="cover-cookie"></div>
+            </div>
+            <div class="cover-utensil fork fork-right" aria-hidden="true"></div>
+            <div class="cover-utensil spoon spoon-right" aria-hidden="true"></div>
+          </div>
+          <div class="overlay cover-copy">
+            <h1>Do you want to accept cookies?</h1>
+            <p>A Recipe for Sweet Surveillance</p>
+          </div>
+          <button id="sound-toggle-btn" class="sound-toggle-btn" type="button">sound on</button>
+          <button id="start-btn" class="cookie-start-btn">start</button>
+        </section>
+
+        <section class="view" data-view="ingredients">
+          <div class="view-bg ingredients-room-bg"></div>
+          <h2 class="view-title">Choose 4 ingredients</h2>
+          <p class="sub-title">Drag into the bowl on the table</p>
+          <div id="table-scene">
+            <div id="ingredient-layer"></div>
+            <div id="bowl-dropzone">
+              <div class="bowl-title">Mixing Bowl</div>
+              <div id="selected-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" data-view="mixing">
+          <div class="view-bg cream-bg"></div>
+          <h2 class="view-title">Mixing...</h2>
+          <p class="sub-title">Drag the whisk around the bowl</p>
+          <div id="mix-zone">
+            <div id="mix-bowl">
+              <div id="mix-batter"></div>
+              <div id="mix-ingredient-layer"></div>
+            </div>
+            <div id="whisk" role="button" aria-label="Drag whisk">
+              <span class="whisk-wires"></span>
+              <span class="whisk-handle"></span>
+            </div>
+          </div>
+          <div id="term-flashes"></div>
+          <div id="mix-progress">0%</div>
+        </section>
+
+        <section class="view" data-view="baking">
+          <div class="view-bg oven-bg"></div>
+          <h2 class="view-title">Baking...</h2>
+          <p class="sub-title" id="bake-message">Personalising your experience...</p>
+          <div class="oven-visual oven-visual--baking" aria-hidden="true"></div>
+          <div id="bake-progress-bar">
+            <div id="bake-progress-inner"></div>
+          </div>
+        </section>
+
+        <section class="view" data-view="reveal">
+          <div class="view-bg reveal-bg" id="reveal-bg"></div>
+          <div id="glitch-layer"></div>
+          <img id="result-cookie-img" alt="" />
+          <div class="reveal-copy">
+            <h2 id="result-name"></h2>
+            <p id="result-line"></p>
+            <p id="score-line"></p>
+            <button id="see-inside-btn" class="pill-btn">See What's Inside</button>
+            <button id="to-gallery-btn" class="pill-btn">Bake Another Cookie</button>
+          </div>
+          <aside id="inside-reveal-panel" class="inside-reveal-panel hidden" aria-live="polite">
+            <button id="close-inside-btn" class="inside-close-btn" aria-label="Close reveal">x</button>
+            <div class="inside-section">
+              <h3>Contains:</h3>
+              <ul id="contains-list"></ul>
+            </div>
+            <div class="inside-section">
+              <h3>Your recipe was shaped by:</h3>
+              <ul id="shaped-by-list"></ul>
+            </div>
+            <p id="sting-line"></p>
+          </aside>
+        </section>
+
+        <section class="view" data-view="gallery">
+          <div class="view-bg tin-bg"></div>
+          <h2 class="view-title">Cookie Tin Collection</h2>
+          <p class="sub-title">Unlock all 6 outcomes</p>
+          <div class="cookie-tin">
+            <div class="tin-lid">
+              <span class="tin-lid-title">Sweet Surveillance</span>
+            </div>
+            <div class="tin-base">
+              <div id="gallery-grid"></div>
+            </div>
+          </div>
+          <button id="retry-btn" class="pill-btn">Try a Safer Batch</button>
+        </section>
+
+        <div id="tv-transition" class="tv-transition hidden" aria-hidden="true">
+          <div class="tv-static"></div>
+          <div class="tv-scanlines"></div>
+          <div class="tv-tear"></div>
+          <div class="tv-transition-label">SIGNAL LOST</div>
+        </div>
+      </div>
+    </main>
+
+    <div id="micro-friction-modal" class="modal hidden">
+      <div class="modal-card">
+        <h3>Are you sure you don't want to read the labels?</h3>
+        <p>These ingredients are not just sweeteners. They are permissions.</p>
+        <button id="continue-anyway-btn" class="pill-btn">Continue</button>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
