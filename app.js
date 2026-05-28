@@ -1,3 +1,18 @@
+const INGREDIENT_SCORE_IDS = {
+  ads: "extra_sweetness",
+  contacts: "smooth_convenience",
+  third_party: "trusted_partners",
+  history: "always_fresh",
+  cross_site: "perfect_texture",
+  dark_pattern: "better_recommendations",
+  location: "local_flavour",
+  voice: "voice_activated_mix",
+  data_sell: "smart_memory",
+  camera: "enhanced_experience",
+  device_fingerprint: "fast_checkout",
+  ai_profile: "ai_profile",
+};
+
 const INGREDIENTS = [
   {
     id: "ads",
@@ -5,7 +20,7 @@ const INGREDIENTS = [
     term: "Personalised ads",
     contains: "personalised ads",
     shapedBy: "personalisation",
-    points: { Exposure: 1, Control: 1, Seduction: 3 },
+    points: { Exposure: 0, Control: 0, Seduction: 2 },
     image: "./assets/ingredients/ingredient-12.png",
     x: 6,
     y: 12,
@@ -16,10 +31,10 @@ const INGREDIENTS = [
     term: "Behavioural profiling",
     contains: "behavioural profiling",
     shapedBy: "precision profiling",
-    points: { Exposure: 3, Control: 2, Seduction: 0 },
+    points: { Exposure: 1, Control: 1, Seduction: 1 },
     image: "./assets/ingredients/ingredient-11.png",
-    x: 21,
-    y: 13,
+    x: 10,
+    y: 35,
   },
   {
     id: "location",
@@ -27,7 +42,7 @@ const INGREDIENTS = [
     term: "Location access",
     contains: "location access",
     shapedBy: "local relevance",
-    points: { Exposure: 3, Control: 1, Seduction: 0 },
+    points: { Exposure: 2, Control: 0, Seduction: 1 },
     image: "./assets/ingredients/ingredient-06.png",
     x: 38,
     y: 12,
@@ -38,10 +53,10 @@ const INGREDIENTS = [
     term: "Browsing history",
     contains: "browsing history",
     shapedBy: "convenience",
-    points: { Exposure: 2, Control: 2, Seduction: 1 },
+    points: { Exposure: 1, Control: 0, Seduction: 2 },
     image: "./assets/ingredients/ingredient-09.png",
-    x: 10,
-    y: 35,
+    x: 21,
+    y: 13,
   },
   {
     id: "history",
@@ -49,7 +64,7 @@ const INGREDIENTS = [
     term: "Cross-device tracking",
     contains: "cross-device tracking",
     shapedBy: "continuous updating",
-    points: { Exposure: 2, Control: 2, Seduction: 1 },
+    points: { Exposure: 1, Control: 2, Seduction: 1 },
     image: "./assets/ingredients/ingredient-08.png",
     x: 28,
     y: 35,
@@ -60,7 +75,7 @@ const INGREDIENTS = [
     term: "Microphone access",
     contains: "microphone access",
     shapedBy: "smart convenience",
-    points: { Exposure: 3, Control: 1, Seduction: 1 },
+    points: { Exposure: 2, Control: 1, Seduction: 1 },
     image: "./assets/ingredients/ingredient-05.png",
     x: 47,
     y: 34,
@@ -71,7 +86,7 @@ const INGREDIENTS = [
     term: "Device fingerprint",
     contains: "device fingerprint",
     shapedBy: "enhanced experience",
-    points: { Exposure: 3, Control: 2, Seduction: 0 },
+    points: { Exposure: 1, Control: 2, Seduction: 1 },
     image: "./assets/ingredients/ingredient-03.png",
     x: 6,
     y: 57,
@@ -82,7 +97,7 @@ const INGREDIENTS = [
     term: "Purchase history",
     contains: "purchase history",
     shapedBy: "efficient checkout",
-    points: { Exposure: 2, Control: 3, Seduction: 0 },
+    points: { Exposure: 2, Control: 0, Seduction: 1 },
     image: "./assets/ingredients/ingredient-02.png",
     x: 23,
     y: 58,
@@ -93,7 +108,7 @@ const INGREDIENTS = [
     term: "Training AI with user data",
     contains: "AI training data",
     shapedBy: "system learning",
-    points: { Exposure: 2, Control: 3, Seduction: 1 },
+    points: { Exposure: 2, Control: 1, Seduction: 1 },
     image: "./assets/ingredients/ingredient-01.png",
     x: 40,
     y: 58,
@@ -104,7 +119,7 @@ const INGREDIENTS = [
     term: "Third-party sharing",
     contains: "third-party sharing",
     shapedBy: "partner trust",
-    points: { Exposure: 3, Control: 3, Seduction: 0 },
+    points: { Exposure: 1, Control: 2, Seduction: 0 },
     image: "./assets/ingredients/ingredient-10.png",
     x: 11,
     y: 75,
@@ -115,7 +130,7 @@ const INGREDIENTS = [
     term: "Preference prediction",
     contains: "preference prediction",
     shapedBy: "customised recommendations",
-    points: { Exposure: 0, Control: 2, Seduction: 3 },
+    points: { Exposure: 0, Control: 0, Seduction: 2 },
     image: "./assets/ingredients/ingredient-07.png",
     x: 30,
     y: 63,
@@ -126,34 +141,166 @@ const INGREDIENTS = [
     term: "Saved login/activity data",
     contains: "saved login and activity data",
     shapedBy: "remembering you",
-    points: { Exposure: 2, Control: 3, Seduction: 0 },
+    points: { Exposure: 2, Control: 0, Seduction: 1 },
     image: "./assets/ingredients/ingredient-04.png",
     x: 47,
     y: 68,
   },
 ];
 
+const TOOLTIP_BELOW_IDS = new Set(["ads", "contacts", "location"]);
+
+const INGREDIENT_TOOLTIPS = {
+  history: {
+    title: "Always Fresh",
+    body: [
+      "Your data is gently refreshed each time you browse, click, pause, or return.",
+      "What feels “fresh” is really constant updating — a profile that grows more detailed over time, so the system can keep serving content that feels perfectly current and perfectly personal.",
+    ],
+    tagline: "Freshly tailored, every single visit.",
+    meaning: "Ongoing tracking and profile updating.",
+  },
+  dark_pattern: {
+    title: "Better Recommendations",
+    body: [
+      "By collecting what you like, what you skip, and what you linger on, the system learns how to suggest what feels most irresistible.",
+      "These “better recommendations” are built from your habits and preferences, turning your behaviour into a recipe for prediction.",
+    ],
+    tagline: "A little more of what you already love.",
+    meaning: "Behaviour-based personalisation.",
+  },
+  ads: {
+    title: "Extra Sweetness",
+    body: [
+      "Tiny delights — rewards, nudges, and personalised touches — make the experience feel more charming and more inviting.",
+      "But sweetness also keeps you engaged longer, helping the system guide your attention while making consent feel effortless and pleasant.",
+    ],
+    tagline: "Because a softer touch is harder to resist.",
+    meaning: "Engagement nudges and persuasive design.",
+  },
+  cross_site: {
+    title: "Perfect Texture",
+    body: [
+      "The base of every perfect cookie is carefully measured — just like the details collected about your device, behaviour, and browsing patterns.",
+      "This “texture” is created through fine-grained profiling, blending small signals together into a smooth, detailed picture of who you are online.",
+    ],
+    tagline: "Delicately blended into something just right.",
+    meaning: "Data profiling and device-level signals.",
+  },
+  contacts: {
+    title: "Smooth Convenience",
+    body: [
+      "Easy buttons, seamless flows, and frictionless choices make everything feel simple and comforting.",
+      "That smoothness often means fewer pauses to question what you’re agreeing to — letting consent slide into place as naturally as cream into batter.",
+    ],
+    tagline: "Soft, seamless, and ready in a single step.",
+    meaning: "Frictionless consent and reduced resistance.",
+  },
+  third_party: {
+    title: "Trusted Partners",
+    body: [
+      "Some ingredients are shared to make the recipe “work better together.”",
+      "In digital terms, that means your information may travel beyond the original site — passed to third parties, advertisers, or analytics partners, all in the name of a more connected experience.",
+    ],
+    tagline: "Carefully shared with those we trust.",
+    meaning: "Third-party data sharing.",
+  },
+  location: {
+    title: "Local Flavour",
+    body: [
+      "A hint of where you are can make everything feel more relevant — nearby offers, local weather, places you might love.",
+      "That “local flavour” often means your location is quietly noted, stored, and used to shape what appears next, even when you are not actively sharing it.",
+    ],
+    tagline: "Made to feel close to home.",
+    meaning: "Location access and geo-tracking.",
+  },
+  voice: {
+    title: "Voice-Activated Mix",
+    body: [
+      "Hands-free convenience makes the kitchen — and the interface — feel effortless and modern.",
+      "Behind the charm, microphone access can mean your voice, commands, and ambient sounds become part of a profile the system learns to recognise.",
+    ],
+    tagline: "Just say the word, and it listens.",
+    meaning: "Microphone access and voice data capture.",
+  },
+  camera: {
+    title: "Enhanced Experience",
+    body: [
+      "Richer visuals and smoother interactions promise a more immersive, polished experience.",
+      "Enhancement often relies on device fingerprinting — subtle technical details that identify your browser, screen, and settings across visits.",
+    ],
+    tagline: "A richer experience, finely tuned.",
+    meaning: "Device fingerprinting and enhanced tracking.",
+  },
+  device_fingerprint: {
+    title: "Fast Checkout",
+    body: [
+      "Saved details and one-click flows make returning feel instant and familiar.",
+      "That speed is powered by purchase history and stored identifiers — a memory of what you bought, when, and how you prefer to pay.",
+    ],
+    tagline: "Ready before you even reach for your wallet.",
+    meaning: "Purchase history and stored payment signals.",
+  },
+  ai_profile: {
+    title: "Future Recipe Learning",
+    body: [
+      "The system learns from every batch — refining its recipe so the next result feels even more tailored.",
+      "In practice, your clicks, choices, and behaviour may be used to train models that predict what you will want next.",
+    ],
+    tagline: "Every visit teaches the oven something new.",
+    meaning: "AI training with user data.",
+  },
+  data_sell: {
+    title: "Smart Memory",
+    body: [
+      "Remembering your preferences feels thoughtful — like a kitchen that always knows how you take your tea.",
+      "Smart memory often means saved logins, activity logs, and identifiers kept long after the moment has passed.",
+    ],
+    tagline: "It remembers so you don’t have to.",
+    meaning: "Saved login and persistent activity data.",
+  },
+};
+
 const RESULTS = [
   {
     id: "glossy",
     name: "Glossy Perfect Cookie",
-    line: "Perfectly personalised. Smooth, attractive, and built from your habits.",
+    line: "Perfectly personalised.",
     color: "#e8ba8d",
     image: "./assets/results/glossy.png",
     audio: "./assets/audio/results/glossy.wav",
+    insideContains: [
+      "Personalised ads",
+      "browsing history",
+      "preference prediction",
+      "saved login/activity data",
+    ],
+    insideMeaning:
+      "This cookie looks smooth and harmless because it is built from comfort, memory, and personalisation. However, the platform may use your habits, searches, clicks, and repeated choices to predict what you want before you choose it yourself. Over time, this can shape what you see, what you buy, and what feels “normal” to you online.",
+    insideFinalLine: "The sweetest cookie is not always the safest one.",
     shapedBy: ["convenience", "personalisation", "default trust", "hidden tracker icons"],
-    sting: "Sweet on the surface, invasive underneath.",
+    sting: "The sweetest cookie is not always the safest one.",
     bg: "linear-gradient(120deg, #9f5665, #6a355a 42%, #201728 100%)",
   },
   {
     id: "burnt",
     name: "Burnt Cookie",
-    line: "Overbaked. Excessive exposure has burned through the boundary.",
+    line: "Overbaked.",
     color: "#503629",
     image: "./assets/results/burnt.png",
     audio: "./assets/audio/results/burnt.wav",
+    insideContains: [
+      "Location access",
+      "microphone access",
+      "saved activity data",
+      "purchase history",
+    ],
+    insideMeaning:
+      "Your location information could be used to identify where you live, study, work, or frequently visit. If this information is accessed by someone with harmful intentions, it could put your personal safety at risk. Microphone access and activity records may also reveal private habits, conversations, and routines that you never meant to share.",
+    insideFinalLine:
+      "Too much exposure can burn through the boundary between convenience and danger.",
     shapedBy: ["exposure", "location tracking", "partner access", "rushed consent"],
-    sting: "You gave too much, and the system burned through the edge.",
+    sting: "Too much exposure can burn through the boundary between convenience and danger.",
     bg: "linear-gradient(120deg, #5c3427, #2f1f19 48%, #101013 100%)",
   },
   {
@@ -163,41 +310,79 @@ const RESULTS = [
     color: "#a0a0a0",
     image: "./assets/results/barbed.png",
     audio: "./assets/audio/results/barbed.wav",
+    insideContains: [
+      "Third-party sharing",
+      "cross-device tracking",
+      "device fingerprinting",
+      "behavioural profiling",
+    ],
+    insideMeaning:
+      "Your data may not stay with one platform. It can be shared across partners, linked across devices, and used to build a profile that follows you from one digital space to another. Even if you clear cookies or change settings, device fingerprinting may still help systems recognise you.",
+    insideFinalLine: "This cookie does not just remember you. It builds a fence around you.",
     shapedBy: ["restriction", "enclosure", "data capture", "persistent identifiers"],
-    sting: "The wrapper is not your safety. It is the system's fence.",
+    sting: "This cookie does not just remember you. It builds a fence around you.",
     bg: "linear-gradient(130deg, #20334d, #1b1b22 40%, #111014 100%)",
   },
   {
     id: "radioactive",
     name: "Radioactive Cookie",
-    line: "Unstable. Long-term risk keeps glowing after the click.",
+    line: "Unstable.",
     color: "#97cf40",
     image: "./assets/results/radioactive.png",
     audio: "./assets/audio/results/radioactive.wav",
+    insideContains: [
+      "Cross-device tracking",
+      "device fingerprinting",
+      "microphone-related access",
+      "AI training with user data",
+    ],
+    insideMeaning:
+      "This cookie represents long-term and less visible risk. Your data may be used not only to track you now, but also to train systems that predict future behaviour. Once personal data enters these learning systems, it may be difficult to know where it goes, how long it stays, or how it will be used later.",
+    insideFinalLine: "Some data risks do not explode immediately. They keep glowing in the background.",
     shapedBy: ["predictive modelling", "persistent tracking", "system learning", "cross-device profiling"],
-    sting: "It does not explode immediately. It keeps emitting.",
+    sting: "Some data risks do not explode immediately. They keep glowing in the background.",
     bg: "linear-gradient(120deg, #395422, #18331a 41%, #0d1410 100%)",
   },
   {
     id: "overloaded",
     name: "Overloaded Cookie",
-    line: "Too much to notice. Options, extras, and permissions pile up.",
+    line: "Too much to notice.",
     color: "#eda35d",
     image: "./assets/results/overloaded.png",
     audio: "./assets/audio/results/overloaded.wav",
+    insideContains: [
+      "Browsing history",
+      "third-party sharing",
+      "microphone access",
+      "device fingerprinting",
+    ],
+    insideMeaning:
+      "This cookie is not dangerous because of one single choice. It is dangerous because many small permissions are stacked together. Each one sounds reasonable on its own: smoother browsing, trusted partners, better features, smarter access. But when combined, they create a dense system of tracking that becomes difficult to understand or control.",
+    insideFinalLine:
+      "The problem is not one ingredient. It is how many hidden layers are baked together.",
     shapedBy: ["enhanced experience", "extras", "unreadable options", "hidden permissions"],
-    sting: "When everything looks useful, the structure disappears.",
+    sting: "The problem is not one ingredient. It is how many hidden layers are baked together.",
     bg: "linear-gradient(120deg, #6a3344, #48224e 44%, #181225 100%)",
   },
   {
     id: "exploded",
     name: "Exploded Cookie",
-    line: "Exposed. The sweet shell split open into raw data structure.",
+    line: "Exposed.",
     color: "#ff4f58",
     image: "./assets/results/exploded.png",
     audio: "./assets/audio/results/exploded.wav",
+    insideContains: [
+      "Location data",
+      "third-party sharing",
+      "device fingerprinting",
+      "AI training data",
+      "behavioural tracking",
+    ],
+    insideMeaning:
+      "This is the most severe outcome. Your data is not only collected, but also connected, shared, analysed, and reused across systems. Location data can reveal physical movement, device information can identify you, and behavioural data can be used to build a detailed profile of your life. When these layers combine, privacy does not simply leak — it breaks open.",
+    insideFinalLine: "Once the cookie cracks, the data inside is no longer yours alone.",
     shapedBy: ["location data", "ad profiling", "behavioural tracking", "partner access"],
-    sting: "Easy to accept. Hard to undo.",
+    sting: "Once the cookie cracks, the data inside is no longer yours alone.",
     bg: "linear-gradient(120deg, #5f1f2b, #2a1f47 36%, #111019 100%)",
   },
 ];
@@ -207,11 +392,15 @@ const state = {
   selected: [],
   hasHoveredTerms: false,
   scores: { Exposure: 0, Control: 0, Seduction: 0 },
+  cookieOutputDebug: null,
   unlocked: new Set(),
   currentResult: null,
   dragItemId: null,
   mixingProgress: 0,
   isWhiskDragging: false,
+  lastTermFlash: 0,
+  bakingAcceptedAll: false,
+  bakingResult: null,
 };
 
 const el = {
@@ -229,7 +418,16 @@ const el = {
   termFlashes: document.getElementById("term-flashes"),
   mixProgress: document.getElementById("mix-progress"),
   bakeMessage: document.getElementById("bake-message"),
-  bakeBarInner: document.getElementById("bake-progress-inner"),
+  consentOven: document.getElementById("consent-oven"),
+  bakeFloatingWords: document.getElementById("bake-floating-words"),
+  bakeSoftenLayer: document.getElementById("bake-soften-layer"),
+  bakeStepBar: document.getElementById("bake-step-bar"),
+  bakeStepProgress: document.getElementById("bake-step-progress"),
+  bakePreview: document.getElementById("bake-preview"),
+  bakeOvenGlitch: document.getElementById("bake-oven-glitch"),
+  acceptAllPopup: document.getElementById("accept-all-popup"),
+  acceptAllBtn: document.getElementById("accept-all-btn"),
+  acceptAllToast: document.getElementById("accept-all-toast"),
   revealBg: document.getElementById("reveal-bg"),
   glitchLayer: document.getElementById("glitch-layer"),
   resultName: document.getElementById("result-name"),
@@ -240,7 +438,7 @@ const el = {
   closeInsideBtn: document.getElementById("close-inside-btn"),
   insideRevealPanel: document.getElementById("inside-reveal-panel"),
   containsList: document.getElementById("contains-list"),
-  shapedByList: document.getElementById("shaped-by-list"),
+  insideMeaning: document.getElementById("inside-meaning"),
   stingLine: document.getElementById("sting-line"),
   galleryGrid: document.getElementById("gallery-grid"),
   tvTransition: document.getElementById("tv-transition"),
@@ -251,22 +449,281 @@ const soundToggleBtn = document.getElementById("sound-toggle-btn");
 const toGalleryBtn = document.getElementById("to-gallery-btn");
 const retryBtn = document.getElementById("retry-btn");
 
-const termsPool = [
-  "consent_to_third_party_access = true",
-  "tracking_scope: behavioral + biometric",
-  "retention_period: undefined",
-  "share_with_partners: enabled",
-  "session_replay.capture_all_inputs()",
-  "geo_watch.interval = 15s",
+const TERMS_CARDS = [
+  {
+    id: "partner-sharing",
+    tier: "foreground",
+    size: "medium",
+    text: `share_with_partner:
+  enabled: true
+  purpose: "personalised sweetness"
+  third_party_access: allowed
+  partner_sync: active`,
+  },
+  {
+    id: "device-fingerprint",
+    tier: "midground",
+    size: "long",
+    text: `device_fingerprint:
+  status: persistent
+  ingredients:
+    - browser_type
+    - screen_size
+    - timezone
+    - motion_pattern`,
+  },
+  {
+    id: "location-history",
+    tier: "foreground",
+    size: "long",
+    text: `location_history:
+  collection: continuous
+  precision: approximate
+  retention_period: indefinite
+  background_access: enabled`,
+  },
+  {
+    id: "ai-training",
+    tier: "foreground",
+    size: "long",
+    text: `ai_training:
+  user_data: included
+  behavioural_signals: captured
+  preference_model: updating
+  consent_source: accept_all`,
+  },
+  {
+    id: "dark-pattern",
+    tier: "midground",
+    size: "long",
+    text: `dark_pattern_accept_all:
+  default: true
+  decline_visibility: low
+  consent_friction: intentional
+  button_hierarchy: manipulated`,
+  },
+  {
+    id: "recommendation-engine",
+    tier: "midground",
+    size: "long",
+    text: `recommendation_engine:
+  taste_profile: generated
+  cravings_predicted: true
+  emotional_state: inferred
+  next_choice: preselected`,
+  },
+  {
+    id: "retention-period",
+    tier: "foreground",
+    size: "medium",
+    text: `retention_period:
+  cookies: "until expired"
+  user_profile: "until profitable"
+  deletion_request: pending
+  archive_status: unresolved`,
+  },
+  {
+    id: "tracking-recipe",
+    tier: "background",
+    size: "medium",
+    text: `tracking_recipe:
+  flour: browsing_history
+  sugar: preference_data
+  butter: device_id
+  hidden_spice: consent_fatigue`,
+  },
+  {
+    id: "consent-status",
+    tier: "foreground",
+    size: "medium",
+    text: `consent_status:
+  accepted: true
+  understood: false
+  modified_by_user: unlikely
+  withdrawal_path: obscured`,
+  },
+  {
+    id: "real-time-bidding",
+    tier: "background",
+    size: "long",
+    text: `real_time_bidding:
+  attention: auctioned
+  identity_graph: matched
+  partner_sync: active
+  value_score: calculated`,
+  },
+  {
+    id: "session-memory",
+    tier: "background",
+    size: "medium",
+    text: `session_memory:
+  clicks: recorded
+  hesitation: measured
+  hover_time: analysed
+  scroll_depth: stored`,
+  },
+  {
+    id: "sweet-surveillance",
+    tier: "background",
+    size: "medium",
+    text: `sweet_surveillance:
+  comfort_layer: enabled
+  risk_notice: softened
+  extraction_mode: gentle
+  warning_tone: decorative`,
+  },
+  {
+    id: "behavioural-dough",
+    tier: "midground",
+    size: "long",
+    text: `behavioural_dough:
+  kneading_pattern: tracked
+  pause_duration: logged
+  repeated_clicks: weighted
+  anxiety_signal: inferred`,
+  },
+  {
+    id: "preference-oven",
+    tier: "midground",
+    size: "long",
+    text: `preference_oven:
+  heat_level: adaptive
+  taste_memory: saved
+  future_cravings: predicted
+  recommendation_loop: closed`,
+  },
+  {
+    id: "hidden-ingredients",
+    tier: "foreground",
+    size: "medium",
+    text: `hidden_ingredients:
+  personal_data: folded_in
+  identifiers: blended
+  consent_notice: sprinkled
+  opt_out: behind_menu`,
+  },
 ];
 
 const bakeMessages = [
-  "Personalising your experience...",
-  "Optimising ad relevance...",
-  "Calibrating behavioral profile...",
-  "Syncing with trusted partners...",
-  "Finalising sweet surveillance...",
+  "Optimising your experience...",
+  "Saving your preferences...",
+  "Sharing with trusted partners...",
+  "Smoothing the terms...",
+  "Decorating consent...",
+  "Hiding bitter details...",
+  "Almost ready to accept.",
 ];
+
+const BAKE_STEPS = [
+  "Softening Terms",
+  "Blending Permissions",
+  "Adding Sweet Interface",
+  "Hiding the Aftertaste",
+];
+
+const BAKE_BASE_STEP_MS = 4500;
+const BAKE_BASE_PREVIEW_MS = 1200;
+const BAKE_BASE_ACCEPT_POPUP_AT = 1400;
+const BAKE_EXTRA_DURATION_MS = 10000;
+const BAKE_BASE_TOTAL_MS = BAKE_BASE_STEP_MS * 4 + BAKE_BASE_PREVIEW_MS;
+const BAKE_DURATION_SCALE = (BAKE_BASE_TOTAL_MS + BAKE_EXTRA_DURATION_MS) / BAKE_BASE_TOTAL_MS;
+
+const BAKE_STEP_MS = Math.round(BAKE_BASE_STEP_MS * BAKE_DURATION_SCALE);
+const BAKE_PREVIEW_MS = Math.round(BAKE_BASE_PREVIEW_MS * BAKE_DURATION_SCALE);
+const BAKE_ACCEPT_POPUP_AT = Math.round(BAKE_BASE_ACCEPT_POPUP_AT * BAKE_DURATION_SCALE);
+const BAKE_MESSAGE_INTERVAL_MS = Math.round(1300 * BAKE_DURATION_SCALE);
+
+function bakeDelay(ms) {
+  return Math.round(ms * BAKE_DURATION_SCALE);
+}
+
+const BAKE_FLOAT_SLOTS = [
+  { x: 11, y: 14 },
+  { x: 84, y: 12 },
+  { x: 47, y: 8 },
+  { x: 7, y: 36 },
+  { x: 91, y: 34 },
+  { x: 22, y: 54 },
+  { x: 78, y: 50 },
+  { x: 50, y: 30 },
+  { x: 14, y: 72 },
+  { x: 86, y: 68 },
+  { x: 38, y: 80 },
+  { x: 64, y: 20 },
+  { x: 28, y: 24 },
+  { x: 72, y: 76 },
+];
+
+const BAKE_TERM_SLOTS = [
+  { x: 13, y: 15, ox: 11, oy: 13 },
+  { x: 79, y: 17, ox: -12, oy: 11 },
+  { x: 18, y: 43, ox: 13, oy: 10 },
+  { x: 75, y: 49, ox: -11, oy: 13 },
+  { x: 45, y: 24, ox: 9, oy: 15 },
+  { x: 10, y: 73, ox: 12, oy: -9 },
+  { x: 85, y: 69, ox: -13, oy: 10 },
+  { x: 51, y: 57, ox: 10, oy: 12 },
+];
+
+const BAKE_BLEND_PHRASES = [
+  "data may be shared",
+  "preferences stored",
+  "activity analysed",
+  "partners may access",
+];
+
+const BAKE_SWEET_PHRASES = [
+  "Optimising your experience...",
+  "Saving your preferences...",
+  "Making it personal...",
+];
+
+const BAKE_EXTRA_PERMISSIONS = [
+  "microphone access",
+  "ad profiling",
+  "cross-site tracking",
+  "device fingerprint",
+  "behavioural profile",
+];
+
+const BAKE_PREVIEW_CLASS = {
+  glossy: "preview-glossy",
+  burnt: "preview-burnt",
+  barbed: "preview-barbed",
+  radioactive: "preview-radioactive",
+  exploded: "preview-exploded",
+  overloaded: "preview-overloaded",
+};
+
+let bakingFrameId = null;
+let bakingMessageTimer = null;
+let bakingStartedAt = 0;
+let bakingTimeBoost = 0;
+let bakingFinished = false;
+let bakingWordsSpawned = [false, false, false, false];
+let bakingPopupShown = false;
+
+const DANGER_KEYWORD_PATTERN =
+  /\b(true|allowed|persistent|indefinite|included|captured|updating|auctioned|obscured|enabled|continuous|active|calculated|manipulated|intentional|unlikely|false|pending|unresolved|matched|recorded|stored|inferred|preselected|generated)\b/gi;
+
+const MIXING_REFERENCE_GAIN = 26;
+const MIXING_REFERENCE_SECONDS = 15;
+const MIXING_EXTRA_SECONDS = 5;
+const MIXING_PROGRESS_GAIN =
+  MIXING_REFERENCE_GAIN *
+  (MIXING_REFERENCE_SECONDS / (MIXING_REFERENCE_SECONDS + MIXING_EXTRA_SECONDS));
+
+const termSlots = [];
+for (let row = 0; row < 6; row += 1) {
+  termSlots.push({ left: 1 + (row % 2) * 3, top: 3 + row * 14 });
+  termSlots.push({ left: 78 + (row % 2) * 4, top: 4 + row * 13.5 });
+}
+[10, 26, 42, 58, 72].forEach((left, index) => {
+  termSlots.push({ left, top: 82 + (index % 2) * 5 });
+});
+[6, 34, 58, 84].forEach((left, index) => {
+  termSlots.push({ left, top: 0.5 + index * 1.2 });
+});
 
 const BATTER_BASE_COLOR = "#e9bf86";
 const BATTER_COLOR_INFLUENCE = {
@@ -309,6 +766,15 @@ class AudioEngine {
     this.page2Drag = null;
     this.page2Drop = null;
     this.page2Warning = null;
+    this.page6Music = null;
+    this.pendingPage6Music = false;
+    this.page5Music = null;
+    this.pendingPage5Music = false;
+    this.page3MixLoop = null;
+    this.pendingPage3MixLoop = false;
+    this.page3TermsSfx = null;
+    this.page3TermsSfxStarted = false;
+    this.pendingPage3TermsSfx = false;
     this.tvGlitchSources = [];
   }
 
@@ -450,6 +916,155 @@ class AudioEngine {
     // Intentional no-op: same reason as stopPage1Ambience.
   }
 
+  initPage5FileAudio() {
+    if (this.page5Music) return;
+    this.page5Music = new Audio("./assets/audio/ui/page5-eerie-musicbox-loop.wav");
+    this.page5Music.loop = true;
+    this.page5Music.preload = "auto";
+    this.page5Music.volume = 0.2;
+  }
+
+  startPage5Music() {
+    this.ensure();
+    if (!this.page5Music) this.initPage5FileAudio();
+    if (!this.page5Music.paused) return;
+    this.page5Music.play().then(() => {
+      this.pendingPage5Music = false;
+    }).catch(() => {
+      this.pendingPage5Music = true;
+    });
+  }
+
+  stopPage5Music() {
+    this.pendingPage5Music = false;
+    if (!this.page5Music) return;
+    this.page5Music.pause();
+    this.page5Music.currentTime = 0;
+  }
+
+  retryPage5Music() {
+    if (!this.pendingPage5Music) {
+      if (this.page5Music?.paused && state.currentView === "reveal") {
+        this.page5Music.play().catch(() => {
+          this.pendingPage5Music = true;
+        });
+      }
+      return;
+    }
+    this.startPage5Music();
+  }
+
+  initPage3MixLoopAudio() {
+    if (this.page3MixLoop) return;
+    this.page3MixLoop = new Audio("./assets/audio/ui/clean-mixing-wet-batter-loop.wav");
+    this.page3MixLoop.loop = true;
+    this.page3MixLoop.preload = "auto";
+    this.page3MixLoop.volume = 0.58;
+  }
+
+  startPage3MixLoop() {
+    this.ensure();
+    if (!this.page3MixLoop) this.initPage3MixLoopAudio();
+    if (!this.page3MixLoop.paused) return;
+    this.page3MixLoop.play().then(() => {
+      this.pendingPage3MixLoop = false;
+    }).catch(() => {
+      this.pendingPage3MixLoop = true;
+    });
+  }
+
+  stopPage3MixLoop() {
+    this.pendingPage3MixLoop = false;
+    if (!this.page3MixLoop) return;
+    this.page3MixLoop.pause();
+    this.page3MixLoop.currentTime = 0;
+  }
+
+  retryPage3MixLoop() {
+    if (!this.pendingPage3MixLoop) {
+      if (this.page3MixLoop?.paused && state.currentView === "mixing" && state.isWhiskDragging) {
+        this.page3MixLoop.play().catch(() => {
+          this.pendingPage3MixLoop = true;
+        });
+      }
+      return;
+    }
+    this.startPage3MixLoop();
+  }
+
+  initPage3TermsSfx() {
+    if (this.page3TermsSfx) return;
+    this.page3TermsSfx = new Audio("./assets/audio/ui/page3-popup-beep-zizz-increasing.wav");
+    this.page3TermsSfx.loop = false;
+    this.page3TermsSfx.preload = "auto";
+    this.page3TermsSfx.volume = 0.62;
+  }
+
+  startPage3TermsSfx() {
+    this.ensure();
+    if (this.page3TermsSfxStarted) return;
+    if (!this.page3TermsSfx) this.initPage3TermsSfx();
+    this.page3TermsSfxStarted = true;
+    this.page3TermsSfx.currentTime = 0;
+    this.page3TermsSfx.play().then(() => {
+      this.pendingPage3TermsSfx = false;
+    }).catch(() => {
+      this.page3TermsSfxStarted = false;
+      this.pendingPage3TermsSfx = true;
+    });
+  }
+
+  stopPage3TermsSfx() {
+    this.page3TermsSfxStarted = false;
+    this.pendingPage3TermsSfx = false;
+    if (!this.page3TermsSfx) return;
+    this.page3TermsSfx.pause();
+    this.page3TermsSfx.currentTime = 0;
+  }
+
+  retryPage3TermsSfx() {
+    if (!this.pendingPage3TermsSfx) return;
+    this.startPage3TermsSfx();
+  }
+
+  initPage6FileAudio() {
+    if (this.page6Music) return;
+    this.page6Music = new Audio("./assets/audio/ui/page6-cozy-cookie-collection-loop.wav");
+    this.page6Music.loop = true;
+    this.page6Music.preload = "auto";
+    this.page6Music.volume = 0.42;
+  }
+
+  startPage6Music() {
+    this.ensure();
+    if (!this.page6Music) this.initPage6FileAudio();
+    if (!this.page6Music.paused) return;
+    this.page6Music.play().then(() => {
+      this.pendingPage6Music = false;
+    }).catch(() => {
+      this.pendingPage6Music = true;
+    });
+  }
+
+  stopPage6Music() {
+    this.pendingPage6Music = false;
+    if (!this.page6Music) return;
+    this.page6Music.pause();
+    this.page6Music.currentTime = 0;
+  }
+
+  retryPage6Music() {
+    if (!this.pendingPage6Music) {
+      if (this.page6Music?.paused && state.currentView === "gallery") {
+        this.page6Music.play().catch(() => {
+          this.pendingPage6Music = true;
+        });
+      }
+      return;
+    }
+    this.startPage6Music();
+  }
+
   playPage1Hover() {
     this.playFileOneShot(this.page1Hover);
   }
@@ -544,7 +1159,11 @@ class AudioEngine {
     this.stopAmbienceTimer();
     this.stopBaking();
     if (viewName !== "cover" && viewName !== "ingredients") this.stopBgMusic();
-    if (viewName !== "reveal") this.stopResultLoop();
+    if (viewName !== "gallery") this.stopPage6Music();
+    if (viewName !== "reveal") {
+      this.stopResultLoop();
+      this.stopPage5Music();
+    }
     if (viewName !== "mixing") this.stopMixing();
 
     if (viewName === "cover") {
@@ -559,9 +1178,11 @@ class AudioEngine {
       this.fade(this.ambienceGain, 0, 0.4);
       this.startBaking();
     } else if (viewName === "gallery") {
-      this.startVacuumRoom();
+      this.fade(this.ambienceGain, 0, 0.45);
+      this.startPage6Music();
     } else if (viewName === "reveal") {
       this.fade(this.ambienceGain, 0.015, 0.5);
+      this.startPage5Music();
     }
   }
 
@@ -808,6 +1429,8 @@ class AudioEngine {
   }
 
   stopMixing() {
+    this.stopPage3MixLoop();
+    this.stopPage3TermsSfx();
     this.fade(this.mixGain, 0, 0.25);
     window.setTimeout(() => this.stopSources(this.mixingSources), 300);
   }
@@ -937,7 +1560,18 @@ class AudioEngine {
 
 const audio = new AudioEngine();
 
+function clearMixingResiduals() {
+  document.documentElement.style.setProperty("--mix-blur", "0px");
+  state.isWhiskDragging = false;
+  if (el.termFlashes) el.termFlashes.innerHTML = "";
+  audio.stopPage3MixLoop();
+  audio.stopPage3TermsSfx();
+}
+
 function showView(viewName) {
+  if (viewName !== "mixing") {
+    clearMixingResiduals();
+  }
   state.currentView = viewName;
   for (const view of document.querySelectorAll(".view")) {
     view.classList.toggle("is-active", view.dataset.view === viewName);
@@ -968,6 +1602,10 @@ function preloadVisuals() {
     "./assets/audio/page2/drag-friction.wav",
     "./assets/audio/page2/drop-impact.wav",
     "./assets/audio/page2/warning-tear-error.wav",
+    "./assets/audio/ui/page6-cozy-cookie-collection-loop.wav",
+    "./assets/audio/ui/page5-eerie-musicbox-loop.wav",
+    "./assets/audio/ui/clean-mixing-wet-batter-loop.wav",
+    "./assets/audio/ui/page3-popup-beep-zizz-increasing.wav",
   ];
   assets.forEach((src) => {
     if (src.endsWith(".wav")) {
@@ -980,6 +1618,35 @@ function preloadVisuals() {
   });
 }
 
+function buildIngredientTooltip(item) {
+  const copy = INGREDIENT_TOOLTIPS[item.id];
+  if (!copy) {
+    return `<div class="ingredient-tooltip" role="tooltip"><h4>${item.name}</h4><p>${item.term}</p></div>`;
+  }
+  const bodyHtml = copy.body.map((paragraph) => `<p>${paragraph}</p>`).join("");
+  return `
+    <div class="ingredient-tooltip" role="tooltip">
+      <h4>${copy.title}</h4>
+      ${bodyHtml}
+      <p class="tooltip-tagline">${copy.tagline}</p>
+      <p class="tooltip-meaning">What it really means: ${copy.meaning}</p>
+    </div>
+  `;
+}
+
+function getIngredientZIndex(id) {
+  const index = INGREDIENTS.findIndex((item) => item.id === id);
+  if (id === "cross_site") {
+    const contactsIndex = INGREDIENTS.findIndex((item) => item.id === "contacts");
+    return contactsIndex + 1;
+  }
+  if (id === "contacts") {
+    const crossSiteIndex = INGREDIENTS.findIndex((item) => item.id === "cross_site");
+    return crossSiteIndex + 1;
+  }
+  return index + 1;
+}
+
 function renderIngredients() {
   el.ingredientLayer.innerHTML = "";
 
@@ -989,10 +1656,14 @@ function renderIngredients() {
     node.dataset.id = item.id;
     node.style.left = `${item.x}%`;
     node.style.top = `${item.y}%`;
+    node.style.zIndex = String(getIngredientZIndex(item.id));
+    if (TOOLTIP_BELOW_IDS.has(item.id)) {
+      node.classList.add("tooltip-below");
+    }
     node.innerHTML = `
       <img class="ingredient-media" src="${item.image}" alt="${item.name}" draggable="false" />
       <span class="ingredient-name">${item.name}</span>
-      <span class="tooltip">${item.term}</span>
+      ${buildIngredientTooltip(item)}
     `;
 
     if (state.selected.includes(item.id)) {
@@ -1009,6 +1680,7 @@ function wireIngredientEvents(node, item) {
   let hoverTimer = null;
 
   node.addEventListener("mouseenter", () => {
+    if (state.dragItemId) return;
     hoverTimer = window.setTimeout(() => {
       state.hasHoveredTerms = true;
       audio.playPage2Hover();
@@ -1024,6 +1696,10 @@ function wireIngredientEvents(node, item) {
 
   node.addEventListener("pointerdown", (event) => {
     event.preventDefault();
+    if (hoverTimer) {
+      clearTimeout(hoverTimer);
+      hoverTimer = null;
+    }
     audio.ensure();
     audio.playPage2Drag();
     state.dragItemId = item.id;
@@ -1134,17 +1810,30 @@ function scoreSelection() {
 function startMixingTracker() {
   state.mixingProgress = 0;
   state.isWhiskDragging = false;
+  state.lastTermFlash = 0;
+  audio.stopPage3TermsSfx();
   document.documentElement.style.setProperty("--mix-blur", "0px");
   el.mixProgress.textContent = "0%";
   el.termFlashes.innerHTML = "";
-  el.whisk.style.left = "28%";
-  el.whisk.style.top = "37%";
+  el.whisk.style.left = "22%";
+  el.whisk.style.top = "30%";
   el.whisk.style.transform = "perspective(700px) rotateX(4deg) rotateY(-5deg) rotate(-18deg)";
   updateMixVisuals(0);
 
   let previousAngle = null;
   let previousTimestamp = performance.now();
   let rafId = null;
+  let termAmbientTimer = null;
+
+  termAmbientTimer = window.setInterval(() => {
+    if (state.currentView !== "mixing") return;
+    const ratio = Math.min(state.mixingProgress / 100, 1);
+    if (ratio < 0.04) return;
+    maybeFlashTerms(false);
+    if (ratio > 0.35) maybeFlashTerms(false);
+    if (ratio > 0.6) maybeFlashTerms(false);
+    if (ratio > 0.8) maybeFlashTerms(false);
+  }, 380);
 
   const onPointerMove = (event) => {
     if (state.currentView !== "mixing") return;
@@ -1173,7 +1862,7 @@ function startMixingTracker() {
       if (delta > Math.PI) delta = 2 * Math.PI - delta;
       const dt = Math.max(now - previousTimestamp, 16);
       const velocity = delta / dt;
-      state.mixingProgress += velocity * 58;
+      state.mixingProgress += velocity * MIXING_PROGRESS_GAIN;
       const blurAmount = Math.min(velocity * 90, 4.5);
       document.documentElement.style.setProperty("--mix-blur", `${blurAmount.toFixed(2)}px`);
       if (velocity > 0.018) {
@@ -1193,6 +1882,8 @@ function startMixingTracker() {
   const onPointerDown = (event) => {
     if (state.currentView !== "mixing") return;
     state.isWhiskDragging = true;
+    audio.ensure();
+    audio.startPage3MixLoop();
     el.whisk.classList.add("is-dragging");
     el.mixZone.setPointerCapture?.(event.pointerId);
     previousAngle = null;
@@ -1209,6 +1900,7 @@ function startMixingTracker() {
 
   const cleanup = () => {
     if (rafId) cancelAnimationFrame(rafId);
+    if (termAmbientTimer) clearInterval(termAmbientTimer);
     el.mixZone.removeEventListener("pointerdown", onPointerDown);
     el.mixZone.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("pointerup", onPointerUp);
@@ -1303,89 +1995,514 @@ function updateMixVisuals(ratio) {
   }
 }
 
-function flashTerm() {
-  if (Math.random() > 0.4) return;
-  const line = termsPool[Math.floor(Math.random() * termsPool.length)];
+function getTermFlashConfig(progressRatio) {
+  const ratio = Math.min(Math.max(progressRatio, 0), 1);
+  const overload = ratio * ratio;
+  let burstCount = 1;
+  if (ratio > 0.8) burstCount = 2 + Math.floor(Math.random() * 2);
+  else if (ratio > 0.55) burstCount = Math.random() > 0.4 ? 2 : 1;
+  else if (ratio > 0.25) burstCount = Math.random() > 0.65 ? 2 : 1;
+
+  return {
+    minInterval: 1100 - overload * 700,
+    maxOnScreen: Math.floor(4 + overload * 20),
+    displayMs: 4200 + ratio * 3800,
+    spawnChance: 0.62 + ratio * 0.35,
+    burstCount,
+  };
+}
+
+function highlightTermText(text) {
+  return text.replace(
+    DANGER_KEYWORD_PATTERN,
+    (match) => `<span class="danger-keyword">${match}</span>`
+  );
+}
+
+function getTermSlotUsage() {
+  const usage = termSlots.map(() => 0);
+  el.termFlashes.querySelectorAll(".flash-term-wrap").forEach((node) => {
+    const idx = Number(node.dataset.slotIndex);
+    if (!Number.isNaN(idx) && usage[idx] !== undefined) usage[idx] += 1;
+  });
+  return usage;
+}
+
+function pickTermSlot() {
+  const usage = getTermSlotUsage();
+  const minUsage = Math.min(...usage);
+  const candidates = usage
+    .map((count, index) => ({ count, index }))
+    .filter((entry) => entry.count === minUsage)
+    .map((entry) => entry.index);
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+function spawnTermAtSlot(progressRatio, displayMs, slotIndex) {
+  const card = TERMS_CARDS[Math.floor(Math.random() * TERMS_CARDS.length)];
+  const slot = termSlots[slotIndex];
+  const stackLevel = getTermSlotUsage()[slotIndex];
+  const stackOffsetX = (stackLevel % 2) * 2.4 - 1.2;
+  const stackOffsetY = Math.floor(stackLevel / 2) * 3;
+  const floatDuration = 6 + Math.random() * 3.5;
+
+  const wrap = document.createElement("div");
+  wrap.className = "flash-term-wrap";
+  wrap.dataset.slotIndex = String(slotIndex);
+  wrap.style.left = `${Math.min(Math.max(slot.left + stackOffsetX, 0), 82)}%`;
+  wrap.style.top = `${Math.min(Math.max(slot.top + stackOffsetY, 0), 88)}%`;
+  wrap.style.zIndex = String(10 + stackLevel);
+  wrap.style.setProperty("--float-duration", `${floatDuration}s`);
+  wrap.style.setProperty("--float-delay", `${Math.random() * 2.5}s`);
+
   const node = document.createElement("div");
-  node.className = "flash-term";
-  node.style.left = `${Math.random() * 80}%`;
-  node.style.top = `${Math.random() * 70}%`;
-  node.textContent = line;
-  el.termFlashes.appendChild(node);
-  window.setTimeout(() => node.remove(), 860);
+  node.className = `flash-term terms-card ${card.tier} term-size-${card.size}`;
+  if (Math.random() > 0.55) node.classList.add("terms-card--flicker");
+  node.style.setProperty("--term-duration", `${displayMs}ms`);
+  node.innerHTML = highlightTermText(card.text);
+
+  wrap.appendChild(node);
+  const isFirstTerm = el.termFlashes.querySelectorAll(".flash-term-wrap").length === 0;
+  el.termFlashes.appendChild(wrap);
+  if (isFirstTerm) {
+    audio.ensure();
+    audio.startPage3TermsSfx();
+  }
+  window.setTimeout(() => wrap.remove(), displayMs + 150);
+}
+
+function spawnTerm(progressRatio, displayMs) {
+  spawnTermAtSlot(progressRatio, displayMs, pickTermSlot());
+}
+
+function maybeFlashTerms(force = false) {
+  const ratio = Math.min(state.mixingProgress / 100, 1);
+  const cfg = getTermFlashConfig(ratio);
+  const existing = el.termFlashes.querySelectorAll(".flash-term-wrap").length;
+  if (existing >= cfg.maxOnScreen) return;
+
+  const now = performance.now();
+  if (!force) {
+    if (now - (state.lastTermFlash || 0) < cfg.minInterval) return;
+    if (Math.random() > cfg.spawnChance) return;
+  }
+
+  state.lastTermFlash = now;
+  const slotsLeft = cfg.maxOnScreen - existing;
+  const count = Math.min(cfg.burstCount, slotsLeft);
+  const usedThisBurst = new Set();
+  for (let i = 0; i < count; i += 1) {
+    const usage = getTermSlotUsage();
+    const minUsage = Math.min(...usage);
+    const freeCandidates = usage
+      .map((slotUsage, index) => ({ slotUsage, index }))
+      .filter((entry) => entry.slotUsage === minUsage && !usedThisBurst.has(entry.index))
+      .map((entry) => entry.index);
+    if (!freeCandidates.length) break;
+    const slotIndex = freeCandidates[Math.floor(Math.random() * freeCandidates.length)];
+    usedThisBurst.add(slotIndex);
+    spawnTermAtSlot(ratio, cfg.displayMs, slotIndex);
+  }
+}
+
+function flashTerm() {
+  maybeFlashTerms(false);
+}
+
+function clearBakingTimers() {
+  if (bakingFrameId) {
+    cancelAnimationFrame(bakingFrameId);
+    bakingFrameId = null;
+  }
+  if (bakingMessageTimer) {
+    clearInterval(bakingMessageTimer);
+    bakingMessageTimer = null;
+  }
+}
+
+function getBakeElapsed() {
+  return performance.now() - bakingStartedAt + bakingTimeBoost;
+}
+
+function getSelectedIngredientWords() {
+  return state.selected
+    .map((id) => INGREDIENTS.find((item) => item.id === id))
+    .filter(Boolean)
+    .map((item) => item.contains);
+}
+
+function pickBakeWordSlot(index, jitter = 2.5) {
+  const slot = BAKE_FLOAT_SLOTS[index % BAKE_FLOAT_SLOTS.length];
+  return {
+    x: slot.x + (Math.random() * jitter * 2 - jitter),
+    y: slot.y + (Math.random() * jitter * 2 - jitter),
+  };
+}
+
+function spawnBakeDataWord(text, className = "", x = null, y = null, durationMs = null) {
+  if (!el.bakeFloatingWords || !text) return;
+  const node = document.createElement("span");
+  node.className = `bake-data-word ${className}`.trim();
+  node.textContent = text;
+  if (x == null || y == null) {
+    const slot = pickBakeWordSlot(el.bakeFloatingWords.childElementCount);
+    node.style.setProperty("--word-x", `${slot.x}%`);
+    node.style.setProperty("--word-y", `${slot.y}%`);
+  } else {
+    node.style.setProperty("--word-x", `${x}%`);
+    node.style.setProperty("--word-y", `${y}%`);
+  }
+  el.bakeFloatingWords.appendChild(node);
+  window.setTimeout(() => node.remove(), durationMs ?? bakeDelay(5200));
+}
+
+function spawnSofteningTermsLayer() {
+  if (!el.bakeSoftenLayer) return;
+  el.bakeSoftenLayer.innerHTML = "";
+  const items = state.selected
+    .map((id) => INGREDIENTS.find((item) => item.id === id))
+    .filter(Boolean);
+  const slots = BAKE_TERM_SLOTS;
+  items.forEach((item, index) => {
+    const slot = slots[index % slots.length];
+    const termCard = document.createElement("div");
+    termCard.className = "bake-term-card";
+    termCard.textContent = item.term;
+    termCard.style.setProperty("--term-x", `${slot.x}%`);
+    termCard.style.setProperty("--term-y", `${slot.y}%`);
+    termCard.style.animationDelay = `${index * bakeDelay(450)}ms`;
+    el.bakeSoftenLayer.appendChild(termCard);
+
+    const containsCard = document.createElement("div");
+    containsCard.className = "bake-term-card";
+    containsCard.textContent = item.contains;
+    containsCard.style.setProperty("--term-x", `${Math.min(Math.max(slot.x + slot.ox, 6), 94)}%`);
+    containsCard.style.setProperty("--term-y", `${Math.min(Math.max(slot.y + slot.oy, 6), 92)}%`);
+    containsCard.style.animationDelay = `${bakeDelay(600) + index * bakeDelay(450)}ms`;
+    el.bakeSoftenLayer.appendChild(containsCard);
+  });
+}
+
+function updateBakeProgressBar(progress) {
+  if (!el.bakeStepProgress) return;
+  el.bakeStepProgress.style.width = `${Math.min(Math.max(progress, 0), 1) * 100}%`;
+}
+
+function setBakeStep(stepIndex) {
+  if (!el.consentOven || !el.bakeStepBar) return;
+  el.consentOven.classList.remove(
+    "consent-oven--step-1",
+    "consent-oven--step-2",
+    "consent-oven--step-3",
+    "consent-oven--step-4"
+  );
+  if (stepIndex >= 0) {
+    el.consentOven.classList.add(`consent-oven--step-${stepIndex + 1}`);
+  }
+  el.bakeStepBar.querySelectorAll(".bake-step").forEach((node, index) => {
+    node.classList.toggle("is-active", index === stepIndex);
+    node.classList.toggle("is-complete", index < stepIndex);
+  });
+}
+
+function spawnStepWords(stepIndex) {
+  if (bakingWordsSpawned[stepIndex]) return;
+  bakingWordsSpawned[stepIndex] = true;
+  if (stepIndex === 0) {
+    spawnSofteningTermsLayer();
+    getSelectedIngredientWords().forEach((word, index) => {
+      window.setTimeout(() => {
+        const slot = pickBakeWordSlot(index);
+        spawnBakeDataWord(word, "bake-data-word--soften", slot.x, slot.y);
+      }, index * bakeDelay(520));
+    });
+    return;
+  }
+  if (stepIndex === 1) {
+    BAKE_BLEND_PHRASES.forEach((phrase, index) => {
+      window.setTimeout(() => {
+        const slot = pickBakeWordSlot(index + 2);
+        spawnBakeDataWord(phrase, "bake-data-word--blend", slot.x, slot.y);
+      }, index * bakeDelay(580));
+    });
+    getSelectedIngredientWords().forEach((word, index) => {
+      window.setTimeout(() => {
+        const slot = pickBakeWordSlot(index + BAKE_BLEND_PHRASES.length + 4);
+        spawnBakeDataWord(word, "bake-data-word--blend", slot.x, slot.y);
+      }, bakeDelay(780) + index * bakeDelay(500));
+    });
+    return;
+  }
+  if (stepIndex === 2) {
+    BAKE_SWEET_PHRASES.forEach((phrase, index) => {
+      window.setTimeout(() => {
+        const slot = pickBakeWordSlot(index + 1);
+        spawnBakeDataWord(phrase, "bake-data-word--sweet", slot.x, slot.y);
+      }, index * bakeDelay(640));
+    });
+  }
+}
+
+function completeAllBakeSteps() {
+  if (!el.consentOven || !el.bakeStepBar) return;
+  el.consentOven.classList.remove(
+    "consent-oven--step-1",
+    "consent-oven--step-2",
+    "consent-oven--step-3"
+  );
+  el.consentOven.classList.add("consent-oven--step-4");
+  el.bakeStepBar.querySelectorAll(".bake-step").forEach((node) => {
+    node.classList.add("is-complete");
+    node.classList.remove("is-active");
+  });
+}
+
+function showAcceptAllPopup() {
+  if (!el.acceptAllPopup || state.bakingAcceptedAll || bakingPopupShown) return;
+  bakingPopupShown = true;
+  el.acceptAllPopup.classList.remove("hidden");
+}
+
+function hideAcceptAllPopup() {
+  el.acceptAllPopup?.classList.add("hidden");
+}
+
+function triggerAcceptAllBake() {
+  if (state.bakingAcceptedAll || bakingFinished) return;
+  state.bakingAcceptedAll = true;
+  hideAcceptAllPopup();
+  el.consentOven?.classList.add("consent-oven--accept-all");
+  el.acceptAllToast?.classList.remove("hidden");
+  el.bakeOvenGlitch?.classList.remove("hidden");
+  el.bakeOvenGlitch?.classList.add("is-visible");
+  audio.playPage2Warning();
+  BAKE_EXTRA_PERMISSIONS.forEach((word, index) => {
+    window.setTimeout(() => {
+      const slot = pickBakeWordSlot(index + 6);
+      spawnBakeDataWord(word, "bake-data-word--blend", slot.x, slot.y);
+    }, index * bakeDelay(240));
+  });
+  window.setTimeout(() => {
+    el.bakeOvenGlitch?.classList.remove("is-visible");
+    el.bakeOvenGlitch?.classList.add("hidden");
+  }, bakeDelay(450));
+  window.setTimeout(() => el.acceptAllToast?.classList.add("hidden"), bakeDelay(2600));
+
+  const elapsed = getBakeElapsed();
+  const totalDuration = BAKE_STEP_MS * 4 + BAKE_PREVIEW_MS;
+  const remaining = Math.max(0, totalDuration - elapsed);
+  bakingTimeBoost += remaining * 0.45;
+}
+
+function showBakePreview(result) {
+  if (!el.bakePreview || !result) return;
+  el.bakePreview.className = "consent-oven__preview is-visible";
+  const previewClass = BAKE_PREVIEW_CLASS[result.id];
+  if (previewClass) el.bakePreview.classList.add(previewClass);
+}
+
+function resetBakingVisuals() {
+  clearBakingTimers();
+  bakingTimeBoost = 0;
+  bakingFinished = false;
+  bakingWordsSpawned = [false, false, false, false];
+  bakingPopupShown = false;
+  state.bakingAcceptedAll = false;
+  state.bakingResult = null;
+  if (el.bakeFloatingWords) el.bakeFloatingWords.innerHTML = "";
+  if (el.bakeSoftenLayer) el.bakeSoftenLayer.innerHTML = "";
+  if (el.consentOven) {
+    el.consentOven.className = "consent-oven";
+  }
+  if (el.bakePreview) {
+    el.bakePreview.className = "consent-oven__preview hidden";
+  }
+  el.bakeOvenGlitch?.classList.add("hidden");
+  el.bakeOvenGlitch?.classList.remove("is-visible");
+  hideAcceptAllPopup();
+  el.acceptAllToast?.classList.add("hidden");
+  updateBakeProgressBar(0);
+  setBakeStep(-1);
+  el.bakeStepBar?.querySelectorAll(".bake-step").forEach((node) => {
+    node.classList.remove("is-active", "is-complete");
+  });
 }
 
 function startBakingStep() {
+  resetBakingVisuals();
   showView("baking");
-  let progress = 0;
-  let messageIndex = 0;
-  el.bakeBarInner.style.width = "0%";
-  el.bakeMessage.textContent = bakeMessages[0];
-  const bakeDuration = 7000;
-  const start = performance.now();
+  state.bakingResult = decideResult();
+  bakingStartedAt = performance.now();
 
-  const timer = window.setInterval(() => {
+  let messageIndex = -1;
+  el.bakeMessage.textContent = "Your choices are being softened, sweetened, and served.";
+  bakingMessageTimer = window.setInterval(() => {
     messageIndex = (messageIndex + 1) % bakeMessages.length;
     el.bakeMessage.textContent = bakeMessages[messageIndex];
-  }, 1400);
+  }, BAKE_MESSAGE_INTERVAL_MS);
+
+  el.consentOven?.style.setProperty("--bake-duration-scale", String(BAKE_DURATION_SCALE));
+
+  let previewStarted = false;
+  let lastStepIndex = -1;
+  const totalBeforePreview = BAKE_STEP_MS * 4;
 
   const tick = () => {
-    const elapsed = performance.now() - start;
-    progress = Math.min((elapsed / bakeDuration) * 100, 100);
-    audio.updateBaking(progress / 100);
-    el.bakeBarInner.style.width = `${progress}%`;
-    if (progress >= 100) {
-      clearInterval(timer);
+    const elapsed = getBakeElapsed();
+    const progress = Math.min(elapsed / totalBeforePreview, 1);
+    const stepIndex = Math.min(Math.floor(elapsed / BAKE_STEP_MS), BAKE_STEPS.length - 1);
+
+    audio.updateBaking(progress);
+    updateBakeProgressBar(progress);
+
+    if (stepIndex !== lastStepIndex) {
+      lastStepIndex = stepIndex;
+      setBakeStep(stepIndex);
+      spawnStepWords(stepIndex);
+      if (stepIndex === 3) {
+        el.bakeMessage.textContent = "Almost ready to accept.";
+      }
+    }
+
+    if (elapsed >= BAKE_ACCEPT_POPUP_AT && !state.bakingAcceptedAll) {
+      showAcceptAllPopup();
+    }
+
+    if (elapsed >= totalBeforePreview && !previewStarted) {
+      previewStarted = true;
+      bakingFinished = true;
+      hideAcceptAllPopup();
+      completeAllBakeSteps();
+      updateBakeProgressBar(1);
+      showBakePreview(state.bakingResult);
+    }
+
+    if (elapsed >= totalBeforePreview + BAKE_PREVIEW_MS) {
+      clearBakingTimers();
       playTvTransition(startRevealStep);
       return;
     }
-    requestAnimationFrame(tick);
+
+    bakingFrameId = requestAnimationFrame(tick);
   };
 
-  requestAnimationFrame(tick);
+  bakingFrameId = requestAnimationFrame(tick);
+}
+
+function getFallbackCookieId(exposure, control, seduction) {
+  const max = Math.max(exposure, control, seduction);
+  const isExposureHighest = exposure === max;
+  const isControlHighest = control === max;
+  const isSeductionHighest = seduction === max;
+  const tiedHighestCount =
+    (isExposureHighest ? 1 : 0) + (isControlHighest ? 1 : 0) + (isSeductionHighest ? 1 : 0);
+
+  if (tiedHighestCount === 1) {
+    if (isSeductionHighest) return "glossy";
+    if (isExposureHighest) return "burnt";
+    return "barbed";
+  }
+
+  const tieOrder = ["radioactive", "overloaded", "burnt", "barbed", "glossy"];
+  for (const cookieId of tieOrder) {
+    if (cookieId === "radioactive") continue;
+    if (cookieId === "overloaded" && tiedHighestCount === 3) return "overloaded";
+    if (cookieId === "burnt" && isExposureHighest) return "burnt";
+    if (cookieId === "barbed" && isControlHighest) return "barbed";
+    if (cookieId === "glossy" && isSeductionHighest) return "glossy";
+  }
+  return "burnt";
+}
+
+function evaluateCookieResult(selectedIds, scores) {
+  const selected = new Set(selectedIds);
+  const exposure = scores.Exposure;
+  const control = scores.Control;
+  const seduction = scores.Seduction;
+  const debug = {
+    selectedIngredientIds: selectedIds.map((id) => INGREDIENT_SCORE_IDS[id] || id),
+    totals: { E: exposure, C: control, S: seduction },
+    matchedRule: null,
+    finalCookie: null,
+  };
+
+  if (
+    exposure >= 6 &&
+    control >= 5 &&
+    selected.has("location") &&
+    selected.has("third_party") &&
+    (selected.has("camera") || selected.has("history") || selected.has("ai_profile"))
+  ) {
+    debug.matchedRule = "1. Exploded Cookie";
+    debug.finalCookie = "exploded";
+    return { id: "exploded", debug };
+  }
+
+  if (
+    exposure >= 5 &&
+    control >= 4 &&
+    selected.has("ai_profile") &&
+    (selected.has("history") || selected.has("camera"))
+  ) {
+    debug.matchedRule = "2. Radioactive Cookie";
+    debug.finalCookie = "radioactive";
+    return { id: "radioactive", debug };
+  }
+
+  if (seduction >= 6 && seduction > exposure && seduction > control) {
+    debug.matchedRule = "3. Glossy Perfect Cookie";
+    debug.finalCookie = "glossy";
+    return { id: "glossy", debug };
+  }
+
+  if (exposure >= 7 && exposure > control && exposure > seduction) {
+    debug.matchedRule = "4. Burnt Cookie";
+    debug.finalCookie = "burnt";
+    return { id: "burnt", debug };
+  }
+
+  if (control >= 6 && control > exposure && control > seduction) {
+    debug.matchedRule = "5. Barbed-Wire Cookie";
+    debug.finalCookie = "barbed";
+    return { id: "barbed", debug };
+  }
+
+  if (
+    exposure >= 4 &&
+    control >= 4 &&
+    seduction >= 4 &&
+    Math.max(exposure, control, seduction) - Math.min(exposure, control, seduction) <= 1
+  ) {
+    debug.matchedRule = "6. Overloaded Cookie";
+    debug.finalCookie = "overloaded";
+    return { id: "overloaded", debug };
+  }
+
+  const fallbackId = getFallbackCookieId(exposure, control, seduction);
+  debug.matchedRule = "7. Fallback";
+  debug.finalCookie = fallbackId;
+  return { id: fallbackId, debug };
+}
+
+function logCookieOutputDebug(debug) {
+  console.group("[Cookie Output]");
+  console.log("Selected ingredient ids:", debug.selectedIngredientIds);
+  console.log("Total scores:", debug.totals);
+  console.log("Matched output rule:", debug.matchedRule);
+  console.log("Final cookie output:", debug.finalCookie);
+  console.groupEnd();
 }
 
 function decideResult() {
-  const { Exposure, Control, Seduction } = state.scores;
-  const selected = new Set(state.selected);
-  const highest = Math.max(Exposure, Control, Seduction);
-
-  // Rule 1: all three dimensions elevated — sensory overload
-  if (Exposure >= 5 && Control >= 5 && Seduction >= 4) {
-    return RESULTS.find((item) => item.id === "overloaded");
-  }
-  // Rule 2: specific high-risk combination — data explosion
-  if (
-    Exposure >= 6 &&
-    Control >= 5 &&
-    selected.has("location") &&
-    selected.has("third_party") &&
-    (selected.has("camera") || selected.has("ai_profile"))
-  ) {
-    return RESULTS.find((item) => item.id === "exploded");
-  }
-  // Rule 3: exposure + control + Future Recipe Learning (ai_profile) — radioactive long-term risk
-  if (Exposure >= 6 && Control >= 5 && selected.has("ai_profile")) {
-    return RESULTS.find((item) => item.id === "radioactive");
-  }
-  // Rule 4: control-dominated profile
-  if (Control >= 6 && Control === highest) {
-    return RESULTS.find((item) => item.id === "barbed");
-  }
-  // Rule 5: exposure-dominated profile
-  if (Exposure >= 7 && Exposure === highest) {
-    return RESULTS.find((item) => item.id === "burnt");
-  }
-  // Rule 6: seduction-dominated profile
-  if (Seduction >= 6 && Seduction === highest) {
-    return RESULTS.find((item) => item.id === "glossy");
-  }
-  // Default fallback
-  return RESULTS.find((item) => item.id === "burnt");
+  scoreSelection();
+  const evaluation = evaluateCookieResult(state.selected, state.scores);
+  state.cookieOutputDebug = evaluation.debug;
+  logCookieOutputDebug(evaluation.debug);
+  return RESULTS.find((item) => item.id === evaluation.id);
 }
 
 function startRevealStep() {
-  state.currentResult = decideResult();
+  state.currentResult = state.bakingResult || decideResult();
   if (!state.currentResult) return;
   state.unlocked.add(state.currentResult.id);
 
@@ -1394,6 +2511,11 @@ function startRevealStep() {
   el.resultName.textContent = state.currentResult.name;
   el.resultLine.textContent = state.currentResult.line;
   el.scoreLine.textContent = `Exposure ${state.scores.Exposure} / Control ${state.scores.Control} / Seduction ${state.scores.Seduction}`;
+  if (state.cookieOutputDebug) {
+    const debug = state.cookieOutputDebug;
+    el.scoreLine.textContent += ` | Rule: ${debug.matchedRule} | Output: ${debug.finalCookie}`;
+    console.log("[Cookie Output Reveal]", debug);
+  }
   el.resultCookieImg.src = state.currentResult.image;
   el.resultCookieImg.alt = state.currentResult.name;
   el.insideRevealPanel.classList.add("hidden");
@@ -1405,20 +2527,13 @@ function startRevealStep() {
 }
 
 function renderInsideReveal() {
-  const selectedIngredients = state.selected
-    .map((id) => INGREDIENTS.find((entry) => entry.id === id))
-    .filter(Boolean);
-  const contains = [...new Set(selectedIngredients.map((ingredient) => ingredient.contains))];
-  const shapedBy = [
-    ...new Set([
-      ...selectedIngredients.map((ingredient) => ingredient.shapedBy),
-      ...(state.currentResult?.shapedBy || []),
-    ]),
-  ];
-
-  renderList(el.containsList, contains);
-  renderList(el.shapedByList, shapedBy);
-  el.stingLine.textContent = state.currentResult?.sting || "Easy to accept. Hard to undo.";
+  const result = state.currentResult;
+  if (!result) return;
+  renderList(el.containsList, result.insideContains || []);
+  if (el.insideMeaning) {
+    el.insideMeaning.textContent = result.insideMeaning || "";
+  }
+  el.stingLine.textContent = result.insideFinalLine || result.sting || "Easy to accept. Hard to undo.";
 }
 
 function renderList(listNode, items) {
@@ -1514,6 +2629,11 @@ el.continueAnywayBtn.addEventListener("click", () => {
   startMixingStep();
 });
 
+el.acceptAllBtn?.addEventListener("click", () => {
+  audio.ensure();
+  triggerAcceptAllBake();
+});
+
 el.seeInsideBtn.addEventListener("click", showInsideReveal);
 
 el.closeInsideBtn.addEventListener("click", () => {
@@ -1522,6 +2642,7 @@ el.closeInsideBtn.addEventListener("click", () => {
 });
 
 toGalleryBtn.addEventListener("click", () => {
+  audio.ensure();
   audio.playMechanicalClick();
   showView("gallery");
   renderGallery();
@@ -1545,6 +2666,12 @@ window.addEventListener(
 window.addEventListener("pointerdown", () => {
   if (state.currentView === "reveal") {
     audio.retryResultLoop();
+    audio.retryPage5Music();
+  } else if (state.currentView === "gallery") {
+    audio.retryPage6Music();
+  } else if (state.currentView === "mixing") {
+    if (state.isWhiskDragging) audio.retryPage3MixLoop();
+    audio.retryPage3TermsSfx();
   }
 });
 
