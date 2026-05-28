@@ -2525,6 +2525,20 @@ h1 {
   border-style: solid;
   border-color: rgba(156, 88, 82, 0.6);
   box-shadow: inset 0 8px 16px rgba(117, 76, 62, 0.11), 0 8px 16px rgba(80, 51, 34, 0.11);
+  cursor: pointer;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.gallery-slot.unlocked:hover,
+.gallery-slot.unlocked:focus-visible {
+  transform: translate(-50%, -50%) scale(1.06);
+  filter: brightness(1.04);
+  outline: none;
+}
+
+.gallery-slot.locked {
+  cursor: default;
+  pointer-events: none;
 }
 
 .gallery-cookie-img {
@@ -2635,6 +2649,24 @@ h1 {
 
 .gallery-slot.unlocked {
   box-shadow: none;
+  cursor: pointer;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.gallery-slot.unlocked:hover,
+.gallery-slot.unlocked:focus-visible {
+  transform: translate(-50%, -50%) scale(1.08);
+  filter: brightness(1.05);
+  outline: none;
+}
+
+.gallery-slot.locked {
+  cursor: default;
+  pointer-events: none;
+}
+
+.gallery-slot.unlocked .slot-name {
+  opacity: 0.92;
 }
 
 .gallery-cookie-img {

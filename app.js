@@ -2501,29 +2501,50 @@ function decideResult() {
   return RESULTS.find((item) => item.id === evaluation.id);
 }
 
-function startRevealStep() {
-  state.currentResult = state.bakingResult || decideResult();
-  if (!state.currentResult) return;
-  state.unlocked.add(state.currentResult.id);
+function applyRevealView(result, { fromGallery = false } = {}) {
+  if (!result) return;
 
+  state.currentResult = result;
   showView("reveal");
-  el.revealBg.style.background = state.currentResult.bg;
-  el.resultName.textContent = state.currentResult.name;
-  el.resultLine.textContent = state.currentResult.line;
-  el.scoreLine.textContent = `Exposure ${state.scores.Exposure} / Control ${state.scores.Control} / Seduction ${state.scores.Seduction}`;
-  if (state.cookieOutputDebug) {
-    const debug = state.cookieOutputDebug;
-    el.scoreLine.textContent += ` | Rule: ${debug.matchedRule} | Output: ${debug.finalCookie}`;
-    console.log("[Cookie Output Reveal]", debug);
+  el.revealBg.style.background = result.bg;
+  el.resultName.textContent = result.name;
+  el.resultLine.textContent = result.line;
+
+  if (fromGallery) {
+    el.scoreLine.textContent = "From your cookie tin collection.";
+  } else {
+    el.scoreLine.textContent = `Exposure ${state.scores.Exposure} / Control ${state.scores.Control} / Seduction ${state.scores.Seduction}`;
+    if (state.cookieOutputDebug) {
+      const debug = state.cookieOutputDebug;
+      el.scoreLine.textContent += ` | Rule: ${debug.matchedRule} | Output: ${debug.finalCookie}`;
+      console.log("[Cookie Output Reveal]", debug);
+    }
   }
-  el.resultCookieImg.src = state.currentResult.image;
-  el.resultCookieImg.alt = state.currentResult.name;
+
+  el.resultCookieImg.src = result.image;
+  el.resultCookieImg.alt = result.name;
   el.insideRevealPanel.classList.add("hidden");
   el.seeInsideBtn.classList.remove("hidden");
   renderInsideReveal();
-  audio.playReveal(state.currentResult.id);
-  audio.playResultLoop(state.currentResult.audio);
+  audio.playReveal(result.id);
+  audio.playResultLoop(result.audio);
   runGlitchSequence();
+}
+
+function startRevealStep() {
+  const result = state.bakingResult || decideResult();
+  if (!result) return;
+  state.unlocked.add(result.id);
+  applyRevealView(result);
+}
+
+function openGalleryCookie(resultId) {
+  if (!state.unlocked.has(resultId)) return;
+  const result = RESULTS.find((item) => item.id === resultId);
+  if (!result) return;
+  audio.ensure();
+  audio.playMechanicalClick();
+  applyRevealView(result, { fromGallery: true });
 }
 
 function renderInsideReveal() {
@@ -2592,11 +2613,28 @@ function renderGallery() {
   RESULTS.forEach((result) => {
     const slot = document.createElement("div");
     const unlocked = state.unlocked.has(result.id);
-    slot.className = `gallery-slot ${unlocked ? "unlocked" : ""}`;
+    slot.className = `gallery-slot ${unlocked ? "unlocked" : "locked"}`;
+    slot.dataset.resultId = result.id;
     slot.innerHTML = `
       <img class="gallery-cookie-img" src="${result.image}" alt="${unlocked ? result.name : "Locked cookie"}" />
       <div class="slot-name">${unlocked ? result.name : "Locked Cookie"}</div>
     `;
+
+    if (unlocked) {
+      slot.setAttribute("role", "button");
+      slot.tabIndex = 0;
+      slot.setAttribute("aria-label", `View ${result.name}`);
+      slot.addEventListener("click", () => openGalleryCookie(result.id));
+      slot.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openGalleryCookie(result.id);
+        }
+      });
+    } else {
+      slot.setAttribute("aria-disabled", "true");
+    }
+
     el.galleryGrid.appendChild(slot);
   });
 }
