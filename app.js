@@ -401,6 +401,7 @@ const state = {
   lastTermFlash: 0,
   bakingAcceptedAll: false,
   bakingResult: null,
+  galleryMusicMuted: false,
 };
 
 const el = {
@@ -441,6 +442,7 @@ const el = {
   insideMeaning: document.getElementById("inside-meaning"),
   stingLine: document.getElementById("sting-line"),
   galleryGrid: document.getElementById("gallery-grid"),
+  galleryMuteBtn: document.getElementById("gallery-mute-btn"),
   tvTransition: document.getElementById("tv-transition"),
 };
 
@@ -1036,6 +1038,7 @@ class AudioEngine {
   }
 
   startPage6Music() {
+    if (state.galleryMusicMuted) return;
     this.ensure();
     if (!this.page6Music) this.initPage6FileAudio();
     if (!this.page6Music.paused) return;
@@ -1054,6 +1057,7 @@ class AudioEngine {
   }
 
   retryPage6Music() {
+    if (state.galleryMusicMuted) return;
     if (!this.pendingPage6Music) {
       if (this.page6Music?.paused && state.currentView === "gallery") {
         this.page6Music.play().catch(() => {
@@ -2608,6 +2612,26 @@ function runGlitchSequence() {
   }, 160);
 }
 
+function updateGalleryMuteButton() {
+  if (!el.galleryMuteBtn) return;
+  const muted = state.galleryMusicMuted;
+  el.galleryMuteBtn.classList.toggle("is-muted", muted);
+  el.galleryMuteBtn.setAttribute("aria-pressed", String(muted));
+  el.galleryMuteBtn.setAttribute("aria-label", muted ? "Unmute gallery music" : "Mute gallery music");
+  el.galleryMuteBtn.textContent = muted ? "muted" : "sound";
+}
+
+function toggleGalleryMute() {
+  state.galleryMusicMuted = !state.galleryMusicMuted;
+  updateGalleryMuteButton();
+  if (state.galleryMusicMuted) {
+    audio.stopPage6Music();
+  } else if (state.currentView === "gallery") {
+    audio.ensure();
+    audio.startPage6Music();
+  }
+}
+
 function renderGallery() {
   el.galleryGrid.innerHTML = "";
   RESULTS.forEach((result) => {
@@ -2684,6 +2708,13 @@ toGalleryBtn.addEventListener("click", () => {
   audio.playMechanicalClick();
   showView("gallery");
   renderGallery();
+  updateGalleryMuteButton();
+});
+
+el.galleryMuteBtn?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  audio.ensure();
+  toggleGalleryMute();
 });
 
 retryBtn.addEventListener("click", () => {
@@ -2715,3 +2746,4 @@ window.addEventListener("pointerdown", () => {
 
 preloadVisuals();
 renderGallery();
+updateGalleryMuteButton();

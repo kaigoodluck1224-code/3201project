@@ -2701,6 +2701,36 @@ h1 {
   z-index: 30;
 }
 
+.gallery-mute-btn {
+  position: absolute;
+  right: 3.2%;
+  top: 3.8%;
+  z-index: 34;
+  border: 1px solid rgba(119, 78, 66, 0.22);
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: rgba(255, 249, 242, 0.62);
+  color: rgba(116, 64, 52, 0.78);
+  font-family: "Roboto Mono", "Courier New", monospace;
+  font-size: clamp(8px, 0.62vw, 10px);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(73, 48, 38, 0.08);
+  transition: background 160ms ease, color 160ms ease, opacity 160ms ease;
+}
+
+.gallery-mute-btn:hover {
+  background: rgba(255, 249, 242, 0.88);
+  color: #744034;
+}
+
+.gallery-mute-btn.is-muted {
+  background: rgba(244, 214, 202, 0.72);
+  color: rgba(116, 64, 52, 0.62);
+  opacity: 0.92;
+}
+
 .gallery-unlock-cta {
   position: absolute;
   left: 9%;
